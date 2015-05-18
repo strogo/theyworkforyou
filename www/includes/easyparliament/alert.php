@@ -466,6 +466,15 @@ class ALERT {
         return $r->success();
     }
 
+    public function delete_all($token) {
+        if (!($alert = $this->check_token($token))) return false;
+        $r = $this->db->query("UPDATE alerts SET deleted = 1 WHERE email = :email", array(
+            ':email' => $alert['email']
+            ));
+
+        return $r->success();
+    }
+
     public function suspend($token) {
         if (!($alert = $this->check_token($token))) return false;
         $r = $this->db->query("UPDATE alerts SET deleted = 2 WHERE alert_id = :alert_id", array(
@@ -546,6 +555,9 @@ function alerts_manage($email) {
         }
     }
     if ($out) {
+        print '<div class="row"><form action="/alert/" method="post"><input type="hidden" name="t" value="'.$token.'">';
+        print 'Delete all your alerts <input style="margin-left: 3em;" type="submit" name="action" value="Delete All">';
+        print '</form><br></div>';
         print '<table cellpadding="3" cellspacing="0"><tr><th>Criteria</th><th>Action</th></tr>' . $out . '</table>';
     } else {
         print '<p>You currently have no email alerts set up.</p>';

@@ -56,6 +56,10 @@ if ($action = get_http_var('action')) {
         $success = $ALERT->delete($token);
         if ($success)
             $message = '<p><strong>That alert has been deleted.</strong> You will no longer receive this alert.</p>';
+    } elseif ($action == 'Delete All') {
+        $success = $ALERT->delete_all($token);
+        if ($success)
+            $message = '<p><strong>All your alerts have been deleted.</strong> You will no longer receive any alerts.</p>';
     }
     if (!$success)
         $message = "<p>The link you followed to reach this page appears to be
@@ -139,10 +143,10 @@ You are not subscribed to an alert for your current MP,
             $PAGE->block_end();
         }
     }
+    $sidebar = ob_get_clean();
     $PAGE->block_start(array ('title'=>'Your current email alerts'));
     alerts_manage($details['email']);
     $PAGE->block_end();
-    $sidebar = ob_get_clean();
 }
 
 $PAGE->block_start(array ('id'=>'alerts', 'title'=>'Request a TheyWorkForYou email alert'));
